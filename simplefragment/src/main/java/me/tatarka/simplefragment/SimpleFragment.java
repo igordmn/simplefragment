@@ -25,7 +25,8 @@ public abstract class SimpleFragment implements SimpleFragmentManagerProvider {
     private SimpleFragmentStateManager stateManager;
     private SimpleFragmentManager manager;
 
-    public abstract void onCreate(Context context, @Nullable Bundle state);
+    public void onCreate(Context context, @Nullable Bundle state) {
+    }
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup parent);
 
