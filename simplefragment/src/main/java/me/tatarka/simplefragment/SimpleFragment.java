@@ -86,7 +86,10 @@ public abstract class SimpleFragment implements SimpleFragmentManagerProvider {
         this.stateManager = stateManager;
         this.manager = new SimpleFragmentManager(stateManager, state.key);
         this.manager.restoreState(state.managerState);
-        this.onCreate(stateManager.getActivity().getApplicationContext(), state.state);
+    }
+
+    final void performCreate() {
+        onCreate(stateManager.getActivity().getApplicationContext(), state.state);
     }
 
     final void performDestroy() {

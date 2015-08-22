@@ -215,6 +215,10 @@ public class SimpleFragmentStateManager {
             Parcelable fragmentState = state.fragmentStates[i];
             fragment.restoreState(this, fragmentState);
         }
+        // Call onCreate
+        for (SimpleFragment fragment : fragments) {
+            fragment.performCreate();
+        }
     }
 
     /**
