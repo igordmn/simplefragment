@@ -89,6 +89,10 @@ public abstract class SimpleFragment implements SimpleFragmentManagerProvider {
         this.onCreate(stateManager.getActivity().getApplicationContext(), state.state);
     }
 
+    final void performDestroy() {
+        onDestroy();
+    }
+
     static SimpleFragment newInstance(Parcelable parcelable) {
         State state = (State) parcelable;
         SimpleFragment fragment = newInstance(state.intent.getSimpleFragmentClassName());

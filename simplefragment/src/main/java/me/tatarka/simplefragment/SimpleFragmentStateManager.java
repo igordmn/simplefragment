@@ -115,6 +115,12 @@ public class SimpleFragmentStateManager {
         }
     }
 
+    public void performDestroy() {
+        for (int i = fragments.size() - 1; i >= 0; i--) {
+            fragments.get(i).performDestroy();
+        }
+    }
+
     /**
      * Destroys the given {@code SimpleFragment} and removes it from this manager. If the fragment
      * is attached to the view hierarchy it's view will be destroyed as well.
@@ -130,6 +136,7 @@ public class SimpleFragmentStateManager {
         if (fragment.getView() != null) {
             destroyView(fragment);
         }
+        fragment.performDestroy();
         if (!fragments.remove(fragment)) {
             throw new IllegalArgumentException("Attempting to remove fragment that was not added: '" + fragment + "'");
         }

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -40,6 +39,7 @@ public class SimpleFragmentDelegate implements SimpleFragmentManagerProvider, La
     private SimpleFragmentViewInflater viewInflater;
     private LayoutInflaterFactory delegateFactory;
     private boolean isRootViewSet = false;
+    private boolean isChangingConfigurations = false;
 
     public static SimpleFragmentDelegate create(Activity activity) {
         return new SimpleFragmentDelegate(activity);
@@ -89,6 +89,9 @@ public class SimpleFragmentDelegate implements SimpleFragmentManagerProvider, La
     public void onDestroy() {
         stateManager.clearConfigurationState();
         manager.clearView();
+        if (!isChangingConfigurations) {
+            stateManager.performDestroy();
+        }
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -97,6 +100,7 @@ public class SimpleFragmentDelegate implements SimpleFragmentManagerProvider, La
     }
 
     public Object onRetainNonConfigurationInstance(@Nullable Object clientState) {
+        isChangingConfigurations = true;
         NonConfigInstance instance = new NonConfigInstance();
         instance.stateManager = stateManager;
         instance.manager = manager;
