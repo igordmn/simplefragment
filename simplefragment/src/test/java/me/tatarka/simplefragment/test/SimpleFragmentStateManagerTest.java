@@ -1,6 +1,5 @@
 package me.tatarka.simplefragment.test;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -11,10 +10,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
+import me.tatarka.simplefragment.BuildConfig;
 import me.tatarka.simplefragment.SimpleFragment;
 import me.tatarka.simplefragment.SimpleFragmentIntent;
 import me.tatarka.simplefragment.SimpleFragmentStateManager;
+import me.tatarka.simplefragment.activity.SimpleFragmentActivity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -24,10 +27,11 @@ import static org.mockito.Mockito.when;
 /**
  * Created by evan on 3/6/15.
  */
-@RunWith(CustomRobolectricRunner.class) // Robolectric needed to not crash on Bundle usage.
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class SimpleFragmentStateManagerTest {
     @Mock
-    Activity activity;
+    SimpleFragmentActivity activity;
     @Mock
     LayoutInflater layoutInflater;
 

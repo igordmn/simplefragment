@@ -1,6 +1,5 @@
 package me.tatarka.simplefragment.test;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -12,13 +11,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.tatarka.simplefragment.SimpleFragmentManager;
+import me.tatarka.simplefragment.BuildConfig;
 import me.tatarka.simplefragment.SimpleFragmentIntent;
+import me.tatarka.simplefragment.SimpleFragmentManager;
 import me.tatarka.simplefragment.SimpleFragmentStateManager;
+import me.tatarka.simplefragment.activity.SimpleFragmentActivity;
 import me.tatarka.simplefragment.widget.SimpleFragmentPagerAdapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,10 +35,11 @@ import static org.mockito.Mockito.when;
  * cases.
  */
 @SuppressWarnings("ConstantConditions")
-@RunWith(CustomRobolectricRunner.class) // Robolectric needed to not crash on Bundle usage.
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class SimpleFragmentPagerAdapterTest {
     @Mock
-    Activity activity;
+    SimpleFragmentActivity activity;
     @Mock
     LayoutInflater layoutInflater;
 
