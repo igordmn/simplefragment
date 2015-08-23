@@ -14,7 +14,6 @@ import me.tatarka.simplefragment.SimpleFragment;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.when;
 
 /**
@@ -25,6 +24,8 @@ public class TestSimpleFragment extends SimpleFragment {
     public boolean wasOnCreateCalled;
     public boolean wasOnCreateViewCalled;
     public boolean wasOnSaveCalled;
+    public boolean wasOnDestroyCalled;
+    public boolean wasOnViewDestroyedCalled;
 
     @Override
     public void onCreate(Context context, @Nullable Bundle state) {
@@ -45,6 +46,16 @@ public class TestSimpleFragment extends SimpleFragment {
     @Override
     public void onSave(@NonNull Bundle state) {
         wasOnSaveCalled = true;
+    }
+
+    @Override
+    public void onViewDestroyed(@NonNull View view) {
+        wasOnViewDestroyedCalled = true;
+    }
+
+    @Override
+    public void onDestroy() {
+        wasOnDestroyCalled = true;
     }
 
     @Override

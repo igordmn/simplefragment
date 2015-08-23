@@ -133,6 +133,7 @@ public class SimpleFragmentStateManager {
         if (fragment == null) {
             throw new IllegalArgumentException("SimpleFragment cannot be null.");
         }
+        fragment.getSimpleFragmentManager().clear();
         if (fragment.getView() != null) {
             destroyView(fragment);
         }

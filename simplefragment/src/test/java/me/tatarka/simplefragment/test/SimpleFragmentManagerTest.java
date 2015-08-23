@@ -236,4 +236,68 @@ public class SimpleFragmentManagerTest {
         TestSimpleFragment nestedFragment = fragment.getSimpleFragmentManager().add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
         assertThat(nestedFragment.getParentFragment()).isSameAs(fragment);
     }
+
+    @Test
+    public void testRemoveWithNested() {
+        SimpleFragmentStateManager stateManager = new SimpleFragmentStateManager(activity);
+        SimpleFragmentManager manager = new SimpleFragmentManager(stateManager, null);
+        manager.setView(rootView);
+        TestSimpleFragment fragment = manager.add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment nestedFragment1 = fragment.getSimpleFragmentManager().add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment nestedFragment2 = nestedFragment1.getSimpleFragmentManager().add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        manager.remove(fragment);
+
+        assertThat(stateManager.getFragments()).isEmpty();
+        assertThat(fragment.wasOnDestroyCalled && fragment.wasOnViewDestroyedCalled).isTrue();
+        assertThat(nestedFragment1.wasOnDestroyCalled && nestedFragment1.wasOnViewDestroyedCalled).isTrue();
+        assertThat(nestedFragment2.wasOnDestroyCalled && nestedFragment2.wasOnViewDestroyedCalled).isTrue();
+    }
+
+    @Test
+    public void testRemoveDetachedWithNested() {
+        SimpleFragmentStateManager stateManager = new SimpleFragmentStateManager(activity);
+        SimpleFragmentManager manager = new SimpleFragmentManager(stateManager, null);
+        manager.setView(rootView);
+        TestSimpleFragment fragment = manager.add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment nestedFragment = fragment.getSimpleFragmentManager().add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment pushedFragment = manager.push(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        manager.remove(fragment);
+
+        assertThat(stateManager.getFragments()).hasSize(1);
+        assertThat(stateManager.getFragments().get(0)).isEqualTo(pushedFragment);
+        assertThat(fragment.wasOnDestroyCalled && fragment.wasOnViewDestroyedCalled).isTrue();
+        assertThat(nestedFragment.wasOnDestroyCalled && nestedFragment.wasOnViewDestroyedCalled).isTrue();
+    }
+
+    @Test
+    public void testPopWithNested() {
+        SimpleFragmentStateManager stateManager = new SimpleFragmentStateManager(activity);
+        SimpleFragmentManager manager = new SimpleFragmentManager(stateManager, null);
+        manager.setView(rootView);
+        TestSimpleFragment fragment = manager.add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment pushedFragment = manager.push(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment nestedFragment = pushedFragment.getSimpleFragmentManager().add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        manager.pop();
+
+        assertThat(stateManager.getFragments()).hasSize(1);
+        assertThat(stateManager.getFragments().get(0)).isEqualTo(fragment);
+        assertThat(pushedFragment.wasOnDestroyCalled && pushedFragment.wasOnViewDestroyedCalled).isTrue();
+        assertThat(nestedFragment.wasOnDestroyCalled && nestedFragment.wasOnViewDestroyedCalled).isTrue();
+    }
+
+    @Test
+    public void testRemoveWithNestedBackstack() {
+        SimpleFragmentStateManager stateManager = new SimpleFragmentStateManager(activity);
+        SimpleFragmentManager manager = new SimpleFragmentManager(stateManager, null);
+        manager.setView(rootView);
+        TestSimpleFragment fragment = manager.add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment nestedFragment = fragment.getSimpleFragmentManager().add(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        TestSimpleFragment nestedPushedFragment = fragment.getSimpleFragmentManager().push(SimpleFragmentIntent.of(TestSimpleFragment.class), KEY);
+        manager.remove(fragment);
+
+        assertThat(stateManager.getFragments()).isEmpty();
+        assertThat(fragment.wasOnDestroyCalled && fragment.wasOnViewDestroyedCalled).isTrue();
+        assertThat(nestedFragment.wasOnDestroyCalled && nestedFragment.wasOnViewDestroyedCalled).isTrue();
+        assertThat(nestedPushedFragment.wasOnDestroyCalled && nestedPushedFragment.wasOnViewDestroyedCalled).isTrue();
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.view.View;
 
@@ -111,6 +112,7 @@ public class SimpleFragmentManager implements SimpleFragmentManagerProvider {
 
     /**
      * Detaches the given {@code SimpleFragment} and destroys it.
+     * All nested fragments also destroyed.
      *
      * @param fragment The fragment to remove.
      */
@@ -125,7 +127,26 @@ public class SimpleFragmentManager implements SimpleFragmentManagerProvider {
         if (fragment.getView() != null) {
             key.detach(this, rootView, fragment);
         }
+
         stateManager.destroy(fragment);
+    }
+
+    /**
+     * Detaches all fragments (including nested fragments and fragments in backstack) and destroys them.
+     */
+    public void clear() {
+        //noinspection StatementWithEmptyBody
+        while (backStack.pop(parentKey)) {
+            // just pop
+        }
+        List<SimpleFragment> fragments = new ArrayList<>();
+        for (SimpleFragmentContainerKey key : attachedKeys) {
+            fragments.add(stateManager.find(key));
+        }
+        fragments.addAll(fragmentsPendingAttach.values());
+        for (SimpleFragment fragment : fragments) {
+            remove(fragment);
+        }
     }
 
     /**
